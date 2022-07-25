@@ -1,0 +1,31 @@
+#!/bin/bash
+
+### script instalação automatizada webserver CentOS 7 
+##instalar repositorios epel 
+yum install epel-release -y
+rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+yum update -y
+
+###Instalar apache server 2.4
+yum --enablerepo=epel,remi install httpd -y
+
+###instalar PHP 7.2
+yum -servp72 install php php-mysql php-xml php-soap php-xmlrpc php-mbstring php-json php-gd php-mcrypt -y
+
+### instalar mysql server 7(mariadb)
+yum install mariadb -y
+
+###starta serviços http e mysql
+service httpd start
+service mariadb start
+
+
+## liberaacesso externo a porta 80 http
+firewalld-cmd --permnanent zone=public --add-service http
+
+##download do wordpress e copia para a pasta html/wordpress
+echo "realizando download do wordpress"
+cd/tmp
+wget https://br.wordpress.org/latest-pt_BR.zip
+unzip latest-pt_BR.zip
+cp -R wordpress /vaw/www/html
